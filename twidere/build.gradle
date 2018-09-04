@@ -24,7 +24,6 @@ buildscript {
 android {
 
     compileSdkVersion globalCompileSdkVersion
-    buildToolsVersion globalBuildToolsVersion
 
     defaultConfig {
         applicationId "com.emojidex.twidere"
@@ -136,6 +135,7 @@ android {
         exclude 'build-data.properties'
     }
 
+    buildToolsVersion '27.0.3'
 }
 
 repositories {
