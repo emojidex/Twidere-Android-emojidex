@@ -46,7 +46,7 @@ buildscript {
 android {
 
     compileSdkVersion globalCompileSdkVersion
-    buildToolsVersion '28.0.2'
+    buildToolsVersion globalBuildToolsVersion
 
     defaultConfig {
         minSdkVersion 14
