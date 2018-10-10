@@ -36,8 +36,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String TWIDERE_PROJECT_EMAIL = "twidere.project@gmail.com";
     String TWIDERE_PACKAGE_NAME = "org.mariotaku.twidere";
 
-    String ACCOUNT_TYPE = "org.mariotaku.twidere.account";
-    String ACCOUNT_AUTH_TOKEN_TYPE = "org.mariotaku.twidere.account.token";
+    String ACCOUNT_TYPE = "com.emojidex.twidere.account";
+    String ACCOUNT_AUTH_TOKEN_TYPE = "com.emojidex.twidere.account.token";
     String ACCOUNT_USER_DATA_KEY = "key";
     String ACCOUNT_USER_DATA_TYPE = "type";
     String ACCOUNT_USER_DATA_CREDS_TYPE = "creds_type";

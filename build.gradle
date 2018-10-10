@@ -1,4 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
     repositories {
         jcenter()
@@ -12,13 +13,12 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
 allprojects {
 
     ext {
-        projectGroupId = 'org.mariotaku.twidere'
-        projectVersionCode = 397
-        projectVersionName = '3.7.3'
+        projectGroupId = 'com.emojidex.twidere'
+        projectVersionCode = 4
+        projectVersionName = '1.0.4'
 
         globalCompileSdkVersion = 26
         globalBuildToolsVersion = '28.0.2'
