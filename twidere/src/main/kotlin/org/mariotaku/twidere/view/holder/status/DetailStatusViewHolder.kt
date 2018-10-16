@@ -38,8 +38,10 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.emojidex.emojidexandroid.EmojiFormat
 import com.emojidex.emojidexandroid.Emojidex
+import com.emojidex.emojidexandroid.animation.updater.TextViewAnimationUpdater
 import com.emojidex.emojidexandroid.downloader.DownloadListener
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
@@ -90,6 +92,13 @@ class DetailStatusViewHolder(
     private val translateLabelView = itemView.translateLabel
 
     private val downloadListener: CustomDownloadListener = CustomDownloadListener()
+    private val animationUpdater: TextViewAnimationUpdater = object : TextViewAnimationUpdater(textView){
+        override fun update() {
+            super.update()
+            if( !adapter.containsViewHolder(getItemId()) )
+                Emojidex.getInstance().removeAnimationUpdater(this)
+        }
+    }
 
     init {
         this.linkClickHandler = DetailStatusLinkClickHandler(adapter.context,
@@ -98,12 +107,16 @@ class DetailStatusViewHolder(
 
         initViews()
 
-        Emojidex.getInstance().addDownloadListener(downloadListener)
+        val emojidex = Emojidex.getInstance()
+        emojidex.addDownloadListener(downloadListener)
+        emojidex.addAnimationUpdater(animationUpdater)
     }
 
     protected fun finalize()
     {
-        Emojidex.getInstance().removeDownloadListener(downloadListener)
+        val emojidex = Emojidex.getInstance()
+        emojidex.removeDownloadListener(downloadListener)
+        emojidex.removeAnimationUpdater(animationUpdater)
     }
 
     @UiThread

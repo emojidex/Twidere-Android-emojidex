@@ -488,6 +488,10 @@ class StatusDetailsAdapter(
         return data
     }
 
+    fun containsViewHolder(id: Long): Boolean {
+        return recyclerView?.findViewHolderForItemId(id) != null
+    }
+
     var isConversationsLoading: Boolean
         get() = ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition
         set(loading) {

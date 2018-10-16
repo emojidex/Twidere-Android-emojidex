@@ -17,6 +17,7 @@ import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import com.emojidex.emojidexandroid.EmojiFormat
 import com.emojidex.emojidexandroid.Emojidex
+import com.emojidex.emojidexandroid.animation.updater.TextViewAnimationUpdater
 import com.emojidex.emojidexandroid.downloader.DownloadListener
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.*
@@ -24,6 +25,7 @@ import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
+import org.mariotaku.twidere.adapter.StatusDetailsAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.extension.loadProfileImage
@@ -94,6 +96,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
     private val downloadListener: CustomDownloadListener = CustomDownloadListener()
+    private val animationUpdater: TextViewAnimationUpdater = object : TextViewAnimationUpdater(textView) {
+        override fun update() {
+            super.update()
+            if(adapter is StatusDetailsAdapter)
+                if( !adapter.containsViewHolder(getItemId()) )
+                    Emojidex.getInstance().removeAnimationUpdater(this)
+        }
+    }
 
 
     init {
@@ -106,12 +116,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     itemView.quotedMediaPreview)
         }
 
-        Emojidex.getInstance().addDownloadListener(downloadListener)
+        val emojidex = Emojidex.getInstance()
+        emojidex.addDownloadListener(downloadListener)
+        emojidex.addAnimationUpdater(animationUpdater)
     }
 
     protected fun finalize()
     {
-        Emojidex.getInstance().removeDownloadListener(downloadListener)
+        val emojidex = Emojidex.getInstance()
+        emojidex.removeDownloadListener(downloadListener)
+        emojidex.removeAnimationUpdater(animationUpdater)
     }
 
 
