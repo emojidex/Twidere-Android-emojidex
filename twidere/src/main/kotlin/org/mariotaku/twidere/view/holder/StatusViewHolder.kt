@@ -19,6 +19,7 @@ import com.emojidex.emojidexandroid.EmojiFormat
 import com.emojidex.emojidexandroid.Emojidex
 import com.emojidex.emojidexandroid.animation.updater.TextViewAnimationUpdater
 import com.emojidex.emojidexandroid.downloader.DownloadListener
+import com.emojidex.emojidexandroid.imageloader.ImageLoadListener
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.mastodon.annotation.StatusVisibility
@@ -96,6 +97,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
     private val downloadListener: CustomDownloadListener = CustomDownloadListener()
+    private val imageLoadListener: CustomImageLoadListener = CustomImageLoadListener()
     private val animationUpdater: TextViewAnimationUpdater = object : TextViewAnimationUpdater(textView) {
         override fun update() {
             super.update()
@@ -118,6 +120,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         val emojidex = Emojidex.getInstance()
         emojidex.addDownloadListener(downloadListener)
+        emojidex.addImageLoadListener(imageLoadListener)
         emojidex.addAnimationUpdater(animationUpdater)
     }
 
@@ -125,6 +128,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     {
         val emojidex = Emojidex.getInstance()
         emojidex.removeDownloadListener(downloadListener)
+        emojidex.removeImageLoadListener(imageLoadListener)
         emojidex.removeAnimationUpdater(animationUpdater)
     }
 
@@ -764,9 +768,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         override fun onDownloadJson(handle: Int, vararg emojiNames: String?) {
             textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
         }
+    }
 
-        override fun onDownloadImages(handle: Int, format: EmojiFormat?, vararg emojiNames: String?) {
-            textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
+    inner class CustomImageLoadListener : ImageLoadListener
+    {
+        override fun onLoad(handle: Int, format: EmojiFormat?, emojiName: String?) {
+            textView.invalidate();
         }
     }
 }

@@ -43,6 +43,7 @@ import com.emojidex.emojidexandroid.EmojiFormat
 import com.emojidex.emojidexandroid.Emojidex
 import com.emojidex.emojidexandroid.animation.updater.TextViewAnimationUpdater
 import com.emojidex.emojidexandroid.downloader.DownloadListener
+import com.emojidex.emojidexandroid.imageloader.ImageLoadListener
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.header_status.view.*
 import org.mariotaku.kpreferences.get
@@ -92,6 +93,7 @@ class DetailStatusViewHolder(
     private val translateLabelView = itemView.translateLabel
 
     private val downloadListener: CustomDownloadListener = CustomDownloadListener()
+    private val imageLoadListener: CustomImageLoadListener = CustomImageLoadListener()
     private val animationUpdater: TextViewAnimationUpdater = object : TextViewAnimationUpdater(textView){
         override fun update() {
             super.update()
@@ -109,6 +111,7 @@ class DetailStatusViewHolder(
 
         val emojidex = Emojidex.getInstance()
         emojidex.addDownloadListener(downloadListener)
+        emojidex.addImageLoadListener(imageLoadListener)
         emojidex.addAnimationUpdater(animationUpdater)
     }
 
@@ -116,6 +119,7 @@ class DetailStatusViewHolder(
     {
         val emojidex = Emojidex.getInstance()
         emojidex.removeDownloadListener(downloadListener)
+        emojidex.removeImageLoadListener(imageLoadListener)
         emojidex.removeAnimationUpdater(animationUpdater)
     }
 
@@ -824,9 +828,12 @@ class DetailStatusViewHolder(
         override fun onDownloadJson(handle: Int, vararg emojiNames: String?) {
             textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
         }
+    }
 
-        override fun onDownloadImages(handle: Int, format: EmojiFormat?, vararg emojiNames: String?) {
-            textView.setText(Emojidex.getInstance().emojify(textView.getText(), null, false))
+    inner class CustomImageLoadListener : ImageLoadListener
+    {
+        override fun onLoad(handle: Int, format: EmojiFormat?, emojiName: String?) {
+            textView.invalidate();
         }
     }
 }
